@@ -1,5 +1,5 @@
 #!/bin/bash
-#SDA process, Thomas Peterson for FoxGuard Solutions June 2015
+#SDA process,Thomas Peterson June 2015
 #Clamav, anti-virus software used to scan both the inside and outside USB drives
 #Secure-delete, utility used to erase the inside USB drive before copy
 #update Clamav before running a scan
