@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # USB-Sheepdip:  Prototype sheep dip appliance for USB security in airgapped environments to be run on a Raspberry Pi
-# Authors:  Thomas Peterson and Charisse Rigdon 
+# Authors:  Thomas Peterson <tpeterson@foxguardsolutions.com> and Charisse Rigdon <crigdon@foxguardsolutions.com>
 # Version: 0.2 June 2015
 #
 
