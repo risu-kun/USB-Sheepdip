@@ -59,13 +59,14 @@ scanInside () {			#  scan the inside USB drive, display infected files, remove t
 
 shredInside () {		#  secure erase the inside USB drive, the default setting writes 38 times and write the output to the log file
 
-	printf "`date +%T`:  Shredding USB now... \n" | tee -a ./log.txt
+	printf "`date +%T`:  Shredding inside USB now... \n" | tee -a ./log.txt
 	sudo umount -v /dev/sdb1 | tee -a ./log.txt
 	sudo shred -v -z -n 0 /dev/sdb1 | tee -a ./log.txt		#  no overwriting; just one pass of writing zeroes
 	
 	if [ "$?" != 0 ]
                 then
-                        printf "ERROR: shred failed.  Please check logs before continuing.\n"
+                        printf "`date +%T`:  ERROR: shred failed.  Please check logs before continuing. Attempting to format USB now... \n"
+                        formatInside
                         exit 1
         fi
 	        
@@ -75,7 +76,14 @@ formatInside () {		#  format USB drive to FAT32
 
 	printf "\n`date +%T`:  Creating new FAT32 filesystem on inside USB...\n"
 	sudo mkdosfs -v -F 32 -I /dev/sdb1 | tee -a ./log.txt
-	printf "`date +%T`:  USB formatted.\n"
+	
+	if [ "$?" == 0 ]
+	        then
+	                printf "`date +%T`:  USB formatted.\n"
+                else
+                        printf "`date +%T`:  ERROR: Unable to format drive.\n"
+                        exit 1
+        fi
 }
 
 remount () {			#  remount the drive to prepare for copy
