@@ -60,10 +60,10 @@ scanInside () {			#  scan the inside USB drive, display infected files, remove t
 shredInside () {		#  secure erase the inside USB drive, the default setting writes 38 times and write the output to the log file
 
 	printf "`date +%T`:  Shredding USB now... \n" | tee -a ./log.txt
-	sudo umount -v /dev/sdb1 
+	sudo umount -v /dev/sdb1 | tee -a ./log.txt
 	sudo shred -v -z -n 0 /dev/sdb1 | tee -a ./log.txt		#  no overwriting; just one pass of writing zeroes
 	
-	if [ "$?" -eq 0 ]
+	if [ "$?" != 0 ]
                 then
                         printf "ERROR: shred failed.  Please check logs before continuing.\n"
                         exit 1
@@ -86,7 +86,7 @@ remount () {			#  remount the drive to prepare for copy
 
 copyOutsideToInside () {	# copy everything on outside USB to newly formatted inside USB
 
-	printf "`date +%T`:  Copying USB now... \n"
+	printf "`date +%T`:  Copying USB now... \n" | tee -a ./log.txt
 	sudo cp -v /home/pi/USBs/outside/* /home/pi/USBs/inside/ | tee -a ./log.txt
 	printf "`date +%T`:  Process complete. * WARNING: CHECK THE LOG FILE BEFORE CONTINUING *\n"
 }
