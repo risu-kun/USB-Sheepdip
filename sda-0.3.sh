@@ -99,7 +99,7 @@ copyOutsideToInside () {	# copy everything on outside USB to newly formatted ins
 	printf "`date +%T`:  Process complete. * WARNING: CHECK THE LOG FILE BEFORE CONTINUING *\n"
 }
 
-finishLog () {		#  append header for this run to log
+finishLog () {		#  append footer for this run to log
 	printf "===================================[ End : `date +%c` ]============================================\n\n" | tee -a log.txt
 	
 }
