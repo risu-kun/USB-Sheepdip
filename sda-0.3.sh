@@ -38,7 +38,7 @@ updateAV () {			#  update clamav definitions -- * not implemented yet *
 scanOutside () {		#  scan the outside USB drive, display infected files, remove them and write the output to a log file in the users home directory home/sda
 
 	printf "`date +%T`:  Scanning the outside USB now... \n" | tee -a ./log.txt
-	sudo clamscan -v -r /home/pi/USBs/inside | tee -a ./log.txt
+	sudo clamscan -v -r /home/pi/USBs/outside | tee -a ./log.txt
 	
 	case $? in             # check exit code
 	       1) printf "** VIRUSES FOUND.  DO NOT USE THESE FILES! **\n" | tee -a ./log.txt; exit 1 ;;
