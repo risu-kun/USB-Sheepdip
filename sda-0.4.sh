@@ -40,7 +40,7 @@ updateAV () {			#  update clamav definitions -- * not implemented yet *
 	
 		if [ $? == 0 ] 
 		
-	    then
+	 	then
 		 
 		   printf "%s: Update successful.\n" , "$(date +%T)" | tee -a ./log.txt
 		  
@@ -133,7 +133,7 @@ shredInside () {		#  secure erase the inside USB drive, the default setting writ
 		
 			printf "Shred Complete... \n"
 			
-        fi
+		fi
 	        
 }
 
