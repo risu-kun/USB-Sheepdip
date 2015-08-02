@@ -40,10 +40,19 @@ scanOutside () {		#  scan the outside USB drive, display infected files, remove 
 	printf "`date +%T`:  Scanning the outside USB now... \n" | tee -a ./log.txt
 	sudo clamscan -v -r /home/fgstest/USBs/outside | tee -a ./log.txt
 	
-	case $? in             # check exit code
-	       1) printf "** VIRUSES FOUND.  DO NOT USE THESE FILES! **\n" | tee -a ./log.txt; exit 1 ;;
-	       2) printf "Error occured with virus scan.\n" | tee -a ./log.txt; exit 1 ;;
-        esac
+	if [ $? == 0 ]
+		then 
+			printf "Virus scan complete no threat found \n"
+			
+	elif [ $? == 1 ]
+		then 
+			printf "** VIRUSES FOUND.  DO NOT USE THESE FILES! **\n" | tee -a ./log.txt 
+			exit 1
+	else
+			printf "Error occurred with virus scan.\n" | tee -a ./log.txt
+			exit 1
+			
+	fi	
 }
 
 scanInside () {			#  scan the inside USB drive, display infected files, remove them and write the output to a log file in the users home directory home/sda
@@ -51,10 +60,19 @@ scanInside () {			#  scan the inside USB drive, display infected files, remove t
 	printf "`date +%T`:  Scanning the inside USB now... \n" | tee -a ./log.txt
 	sudo clamscan -v -r /home/fgstest/USBs/inside | tee -a ./log.txt
 	
-	case $? in             # check exit code
-	       1) printf "** VIRUSES FOUND.  DO NOT USE THESE FILES! **\n" | tee -a ./log.txt ; exit 1 ;;
-	       2) printf "Error occured with virus scan.\n" | tee -a ./log.txt ; exit 1 ;;
-        esac
+	if [ $? == 0 ]
+		then 
+			printf "Virus scan complete no threat found \n"
+			
+	elif [ $? == 1 ]
+		then 
+			printf "** VIRUSES FOUND.  DO NOT USE THESE FILES! **\n" | tee -a ./log.txt 
+			exit 1
+	else
+			printf "Error occurred with virus scan.\n" | tee -a ./log.txt
+			exit 1
+			
+	fi	
 }
 
 shredInside () {		#  secure erase the inside USB drive, the default setting writes 38 times and write the output to the log file
@@ -107,7 +125,7 @@ unmount ()  {		# unmount USB drives so they can be safley removed
 	
 	sudo umount -v /dev/sdb | tee -a ./log.txt
 	
-	printf "":Unmount complete USBs can be safely removed * WARNING CHECK THE LOG FILE BEFORE CONTINUING *\n" 
+	printf ":Unmount complete USBs can be safely removed * WARNING CHECK THE LOG FILE BEFORE CONTINUING *\n" 
 	
 }
 
