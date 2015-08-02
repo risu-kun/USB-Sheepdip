@@ -120,11 +120,8 @@ copyOutsideToInside () {	# copy everything on outside USB to newly formatted ins
 unmount ()  {		# unmount USB drives so they can be safley removed 
 
 	printf " `date +%T`:Unmounting USB now standby... \n" |tee -a ./log.txt 
-	
 	sudo umount -v /dev/sda | tee -a ./log.txt
-	
 	sudo umount -v /dev/sdb | tee -a ./log.txt
-	
 	printf ":Unmount complete USBs can be safely removed * WARNING CHECK THE LOG FILE BEFORE CONTINUING *\n" 
 	
 }
