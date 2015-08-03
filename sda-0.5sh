@@ -7,7 +7,7 @@
 
 
 initializeLog () {		#  append header for this run to log
-	printf "\n\n====================[ SDA Start : `date +%c` ]\n\n" | tee -a log.txt
+	printf "\n\n====================[ SDA Start : `date +%c` ]====================\n\n" | tee -a log.txt
 	
 }
 
@@ -42,7 +42,7 @@ updateAV () {			#  update clamav definitions
 
 scanOutside () {		#  scan the outside USB drive, display infected files, remove them and write the output to a log file in the users home directory home/ada1
 
-	printf "\n\n====================[ `date +%T`:  Scanning the outside USB now...]\n\n" | tee -a ./log.txt
+	printf "\n\n====================[ `date +%T`:  Scanning the outside USB now...]====================\n\n" | tee -a ./log.txt
 	sudo clamscan -v -r --move=/home/fgstest/virus /home/fgstest/USBs/outside | tee -a ./log.txt
 	
 	if [ $? == 0 ]
@@ -62,7 +62,7 @@ scanOutside () {		#  scan the outside USB drive, display infected files, remove 
 
 scanInside () {			#  scan the inside USB drive, display infected files, remove them and write the output to a log file in the users home directory home/ada1
 
-	printf "\n\n====================[ `date +%T`:  Scanning the inside USB now...]\n \n" | tee -a ./log.txt
+	printf "\n\n====================[ `date +%T`:  Scanning the inside USB now...]====================\n \n" | tee -a ./log.txt
 	sudo clamscan -v -r --move=/home/fgstest/virus /home/fgstest/USBs/inside | tee -a ./log.txt
 	
 	if [ $? == 0 ]
@@ -82,7 +82,7 @@ scanInside () {			#  scan the inside USB drive, display infected files, remove t
 
 shredInside () {		#  secure erase the inside USB drive, the default setting writes 38 times and write the output to the log file
 
-	printf "\n\n====================[ `date +%T`:  Shredding inside USB now...]\n\n" | tee -a ./log.txt
+	printf "\n\n====================[ `date +%T`:  Shredding inside USB now...]====================\n\n" | tee -a ./log.txt
 	sudo umount -v /dev/adb1 | tee -a ./log.txt
 	sudo shred -v -z -n 0 /dev/adb1 | tee -a ./log.txt		#  no overwriting; just one pass of writing zeroes
 	
@@ -96,7 +96,7 @@ shredInside () {		#  secure erase the inside USB drive, the default setting writ
 
 formatInside () {		#  format USB drive to FAT32 
 
-	printf "\n\n====================[ `date +%T`:  Creating new FAT32 filesystem on inside USB...]\n\n"
+	printf "\n\n====================[ `date +%T`:  Creating new FAT32 filesystem on inside USB...]====================\n\n"
 	sudo mkdosfs -v -F 32 -I /dev/adb1 | tee -a ./log.txt
 	
 	if [ $? == 0 ]
@@ -116,7 +116,7 @@ remount () {			#  remount the drive to prepare for copy
 
 copyOutsideToInside () {	# copy everything on outside USB to newly formatted inside USB
 
-	printf "\n\n====================[ `date +%T`:  Copying USB now...]\n\n" | tee -a ./log.txt
+	printf "\n\n====================[ `date +%T`:  Copying USB now...]====================\n\n" | tee -a ./log.txt
 	cp /home/fgstest/USBs/outside/* /home/fgstest/USBs/inside/ | tee -a ./log.txt
 	printf "`date +%T`:  Process complete. * WARNING: CHECK THE LOG FILE BEFORE CONTINUING *\n"
 }
@@ -126,14 +126,14 @@ removeUsb ()  {		# unmount USB drives so they can be safley removed
 	printf " `date +%T`:Unmounting USB now standby... \n" |tee -a ./log.txt 
 	sudo umount /dev/ada1
 	sudo umount /dev/adb1
-	printf "\n\n====================[ Unmount complete USBs can be safely removed ]\n\n" | tee -a ./log.txt 
+	printf "\n\n====================[ Unmount complete USBs can be safely removed ]====================\n\n" | tee -a ./log.txt 
 	
 }
 
 finishLog () {		#  append footer for this run to log
 
-	printf "\n====================[ *** WARNING CHECK THE LOG FILE BEFORE CONTINUING *** ]\n" | ./tee -a log.txt
-	printf "\n====================[ End : `date +%c` ]\n" | tee -a log.txt
+	printf "\n====================[ *** WARNING CHECK THE LOG FILE BEFORE CONTINUING *** ]====================\n" | ./tee -a log.txt
+	printf "\n====================[ End : `date +%c` ]====================\n" | tee -a log.txt
 }
 
 
