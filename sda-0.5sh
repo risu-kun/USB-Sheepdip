@@ -33,7 +33,7 @@ updateAV () {			#  update clamav definitions
 			printf "Exiting due to lack of current Clamav update, please update to the latest definitions before continuing."
 			sudo umount -v /dev/ada1
 			exit 1
-	else  
+		else  
 			sudo cp /home/fgstest/USBs/outside/clamav/* /home/fgstest/clamav_update/
 			sudo service clamav-freshclam restart 	#restarts freshclam so updated definitions are used for scan.
 	fi
@@ -53,7 +53,7 @@ scanOutside () {		#  scan the outside USB drive, display infected files, remove 
 		then 
 			printf "*** VIRUSES FOUND, DO NOT USE THESE FILES! ***\n" | tee -a ./log.txt 
 			exit 1
-	else
+		else
 			printf "Error occurred with virus scan.\n" | tee -a ./log.txt
 			exit 1
 			
@@ -73,7 +73,7 @@ scanInside () {			#  scan the inside USB drive, display infected files, remove t
 		then 
 			printf "*** VIRUSES FOUND, DO NOT USE THESE FILES! ***\n" | tee -a ./log.txt 
 			exit 1
-	else
+		else
 			printf "Error occurred with virus scan.\n" | tee -a ./log.txt
 			exit 1
 			
