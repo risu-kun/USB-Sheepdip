@@ -90,7 +90,7 @@ shredInside () {		#  secure erase the inside USB drive, the default setting writ
 		then
 			printf " `date +%T`: ERROR: shred failed.  Please check logs before continuing. Attempting to format USB now...\n"
             exit 1
-    fi
+    	fi
 	        
 }
 
