@@ -7,7 +7,7 @@
 
 
 initializeLog () {		#  append header for this run to log
-	printf "\n\n====================[ ada1 Start : `date +%c` ]\n\n" | tee -a log.txt
+	printf "\n\n====================[ SDA Start : `date +%c` ]\n\n" | tee -a log.txt
 	
 }
 
@@ -132,8 +132,8 @@ removeUsb ()  {		# unmount USB drives so they can be safley removed
 
 finishLog () {		#  append footer for this run to log
 
-	printf "\n\n====================[ End : `date +%c` ]\n\n" | tee -a log.txt
-	printf "\n\n====================[ *** WARNING CHECK THE LOG FILE BEFORE CONTINUING *** ]\n\n" | ./tee -a log.txt
+	printf "\n====================[ *** WARNING CHECK THE LOG FILE BEFORE CONTINUING *** ]\n" | ./tee -a log.txt
+	printf "\n====================[ End : `date +%c` ]\n" | tee -a log.txt
 }
 
 
