@@ -7,7 +7,7 @@
 
 
 initializeLog () {		#  append header for this run to log
-	printf "\n\n===================================[ sda Start : `date +%c` ]============================================\n\n" | tee -a log.txt
+	printf "\n\n====================[ sda Start : `date +%c` ]\n\n" | tee -a log.txt
 	
 }
 
@@ -15,7 +15,7 @@ checkMountPoints () {
         
 	sudo mount -a
     df -Th | grep sd
-        printf "\nAre these mount points correct? (y/n): "
+        printf "Are these mount points correct? (y/n)\n"
         read -r input
     if  [ "$input" != "y" ]
 		then
@@ -26,7 +26,7 @@ checkMountPoints () {
 
 updateAV () {			#  update clamav definitions
 
-		printf "`date +%T`: Are the latest Clamav updates in the clamav directory on the outside USB drive (y/n). \n" | tee -a ./log.txt
+		printf " `date +%T`: Are the latest Clamav updates in the clamav directory on the outside USB drive (y/n).\n" | tee -a ./log.txt
 		read -r input 
 	if  [ "$input" != "y" ]
 		then  
@@ -42,7 +42,7 @@ updateAV () {			#  update clamav definitions
 
 scanOutside () {		#  scan the outside USB drive, display infected files, remove them and write the output to a log file in the users home directory home/sda
 
-	printf "\n\n===================[`date +%T`:  Scanning the outside USB now...]====== \n\n" | tee -a ./log.txt
+	printf "\n\n====================[ `date +%T`:  Scanning the outside USB now...]\n\n" | tee -a ./log.txt
 	sudo clamscan -v -r --move=/home/fgstest/virus /home/fgstest/USBs/outside | tee -a ./log.txt
 	
 	if [ $? == 0 ]
@@ -51,7 +51,7 @@ scanOutside () {		#  scan the outside USB drive, display infected files, remove 
 			
 	elif [ $? == 1 ]
 		then 
-			printf "** VIRUSES FOUND.  DO NOT USE THESE FILES! **\n" | tee -a ./log.txt 
+			printf "*** VIRUSES FOUND, DO NOT USE THESE FILES! ***\n" | tee -a ./log.txt 
 			exit 1
 	else
 			printf "Error occurred with virus scan.\n" | tee -a ./log.txt
@@ -62,7 +62,7 @@ scanOutside () {		#  scan the outside USB drive, display infected files, remove 
 
 scanInside () {			#  scan the inside USB drive, display infected files, remove them and write the output to a log file in the users home directory home/sda
 
-	printf "\n\n===================[`date +%T`:  Scanning the inside USB now...]======\n \n" | tee -a ./log.txt
+	printf "\n\n====================[ `date +%T`:  Scanning the inside USB now...]\n \n" | tee -a ./log.txt
 	sudo clamscan -v -r --move=/home/fgstest/virus /home/fgstest/USBs/inside | tee -a ./log.txt
 	
 	if [ $? == 0 ]
@@ -71,7 +71,7 @@ scanInside () {			#  scan the inside USB drive, display infected files, remove t
 			
 	elif [ $? == 1 ]
 		then 
-			printf "** VIRUSES FOUND.  DO NOT USE THESE FILES! **\n" | tee -a ./log.txt 
+			printf "*** VIRUSES FOUND, DO NOT USE THESE FILES! ***\n" | tee -a ./log.txt 
 			exit 1
 	else
 			printf "Error occurred with virus scan.\n" | tee -a ./log.txt
@@ -82,13 +82,13 @@ scanInside () {			#  scan the inside USB drive, display infected files, remove t
 
 shredInside () {		#  secure erase the inside USB drive, the default setting writes 38 times and write the output to the log file
 
-	printf "\n\n===================[`date +%T`:  Shredding inside USB now...]=======\n \n" | tee -a ./log.txt
+	printf "\n\n====================[ `date +%T`:  Shredding inside USB now...]\n\n" | tee -a ./log.txt
 	sudo umount -v /dev/sdb | tee -a ./log.txt
 	sudo shred -v -z -n 0 /dev/sdb | tee -a ./log.txt		#  no overwriting; just one pass of writing zeroes
 	
 	if [ $? != 0 ]
 		then
-			printf "`date +%T`:  ERROR: shred failed.  Please check logs before continuing. Attempting to format USB now... \n"
+			printf " `date +%T`: ERROR: shred failed.  Please check logs before continuing. Attempting to format USB now...\n"
             exit 1
     fi
 	        
@@ -96,14 +96,14 @@ shredInside () {		#  secure erase the inside USB drive, the default setting writ
 
 formatInside () {		#  format USB drive to FAT32 
 
-	printf "\n\n===================[`date +%T`:  Creating new FAT32 filesystem on inside USB...]===\n\n"
+	printf "\n\n====================[ `date +%T`:  Creating new FAT32 filesystem on inside USB...]\n\n"
 	sudo mkdosfs -v -F 32 -I /dev/sdb | tee -a ./log.txt
 	
 	if [ $? == 0 ]
 		then
-			printf "`date +%T`:  USB formatted.\n"
+			printf " `date +%T`:  USB formatted.\n"
 		else
-			printf "`date +%T`:  ERROR: Unable to format drive.\n"
+			printf " `date +%T`:  ERROR: Unable to format drive.\n"
 			exit 1
 	fi
 }
@@ -116,23 +116,24 @@ remount () {			#  remount the drive to prepare for copy
 
 copyOutsideToInside () {	# copy everything on outside USB to newly formatted inside USB
 
-	printf "\n\n====================[`date +%T`:  Copying USB now...]======\n\n" | tee -a ./log.txt
-	sudo cp -v /home/fgstest/USBs/outside/* /home/fgstest/USBs/inside/ | tee -a ./log.txt
+	printf "\n\n====================[ `date +%T`:  Copying USB now...]\n\n" | tee -a ./log.txt
+	cp /home/fgstest/USBs/outside/* /home/fgstest/USBs/inside/ | tee -a ./log.txt
 	printf "`date +%T`:  Process complete. * WARNING: CHECK THE LOG FILE BEFORE CONTINUING *\n"
 }
 
-unmount ()  {		# unmount USB drives so they can be safley removed 
+removeUsb ()  {		# unmount USB drives so they can be safley removed 
 
 	printf " `date +%T`:Unmounting USB now standby... \n" |tee -a ./log.txt 
-	sudo umount -f /home/fgstest/USBs/inside
-	sudo umount -f /home/fgstest/USBs/outside
-	printf "\n\n===================[ Unmount complete USBs can be safely removed * WARNING CHECK THE LOG FILE BEFORE CONTINUING *]=\n\n" 
+	sudo umount /dev/sda
+	sudo umount /dev/sdb
+	printf "\n\n====================[ Unmount complete USBs can be safely removed ]\n\n" | tee -a ./log.txt 
 	
 }
 
 finishLog () {		#  append footer for this run to log
-	printf "\n\n===================================[ End : `date +%c` ]============================================\n\n" | tee -a log.txt
-	
+
+	printf "\n\n====================[ End : `date +%c` ]\n\n" | tee -a log.txt
+	printf "\n\n====================[ *** WARNING CHECK THE LOG FILE BEFORE CONTINUING *** ]\n\n" | ./tee -a log.txt
 }
 
 
@@ -146,7 +147,7 @@ shredInside
 formatInside
 remount
 copyOutsideToInside
-umount 
+removeUsb
 
 finishLog
 
